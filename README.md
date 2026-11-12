@@ -11,12 +11,6 @@ An interactive dashboard that compares Rolling Stone's 2003 and 2020 rankings of
 
 ## Screenshots
 
-> Put the image files in `docs/screenshots/` and keep the names below, so the images show up here automatically.
-
-| File | What to capture |
-|---|---|
-| `docs/screenshots/01-dashboard-overview.png` | The full dashboard with **no filters** (all three views, filter bar and legend visible) |
-| `docs/screenshots/02-female-filter.png` | The dashboard with **Female** selected (bars shrinking inside their dashed outlines, line-chart medians close together) |
 
 ![Dashboard overview](docs/screenshots/01-dashboard-overview.png)
 
