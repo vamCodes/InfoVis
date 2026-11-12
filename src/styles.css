@@ -1,0 +1,257 @@
+/* styles.css — every visual rule for the dashboard.
+   Design idea: a printed "record sleeve / zine" look. Warm paper, black ink, hard borders,
+   an offset shadow, big quirky display type, mono type for data. Color is saved for the data
+   itself (the genre hues), so the eye goes to the dots first (visual hierarchy). */
+
+/* ---------- Design tokens: change a value here and it changes everywhere ---------- */
+:root {
+  --paper: #ece6d8;        /* page + panel background */
+  --paper-2: #e2dbc9;      /* slightly darker paper for plot areas and chips */
+  --ink: #14130f;          /* near-black for text and borders */
+  --ink-soft: #5d5a50;     /* secondary text */
+  --grid: #cfc8b6;         /* light gridlines */
+  --accent: #e4572e;       /* the one UI accent (matches the first genre hue) */
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+}
+
+/* Box sizing: padding and border are included in an element's width/height. Makes layout predictable. */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* ---------- The frame: ONE border enclosing all views (Gestalt: enclosure) ---------- */
+.frame {
+  display: flex;
+  flex-direction: column;
+  /* min-height (not height): the frame is at least one screen tall, but GROWS if the title, filters
+     and legend need more room. Before, a fixed height squeezed the charts and cut content off. */
+  min-height: calc(100vh - 40px);   /* 40px = body padding top+bottom */
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  box-shadow: 7px 7px 0 var(--ink);   /* hard offset shadow = printed-poster feel */
+}
+
+/* ---------- Title band ---------- */
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 14px 20px 12px;
+  border-bottom: 2.5px solid var(--ink);
+}
+.masthead__kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.masthead__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(24px, 3.1vw, 42px);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+.masthead__vs {
+  margin-left: 14px;
+  padding: 0 10px;
+  background: var(--ink);
+  color: var(--paper);
+  white-space: nowrap;
+}
+.masthead__vs i { font-weight: 300; color: var(--accent); }
+
+/* Live numbers (albums shown / rose / fell) */
+.readout { display: flex; gap: 22px; margin: 0; }
+.readout div { text-align: right; }
+.readout dt { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
+.readout dd { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1; }
+
+/* ---------- Filter band ---------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 28px;
+  padding: 9px 20px;
+  border-bottom: 2.5px solid var(--ink);
+  background: var(--paper-2);
+}
+.filters__group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filters__label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 9px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-size: 12px;
+  transition: transform 0.08s, background 0.12s;
+}
+.chip:hover { transform: translateY(-1px); }
+.chip.is-on { background: var(--ink); color: var(--paper); }   /* selected look */
+.chip__swatch { width: 10px; height: 10px; border: 1px solid var(--ink); border-radius: 50%; }
+.chip.is-on .chip__swatch { border-color: var(--paper); }
+
+.segmented { display: inline-flex; border: 1.5px solid var(--ink); }
+.segmented__btn { padding: 3px 12px; background: var(--paper); border: 0; border-right: 1.5px solid var(--ink); font-size: 12px; }
+.segmented__btn:last-child { border-right: 0; }
+.segmented__btn.is-on { background: var(--ink); color: var(--paper); }
+
+.reset {
+  margin-left: auto;                 /* pushes the button to the far right */
+  padding: 4px 14px;
+  background: var(--accent);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  font-weight: 500;
+}
+.reset:hover { background: var(--ink); color: var(--paper); }
+
+/* ---------- The three-view grid ---------- */
+.dash {
+  flex: 1;                           /* take all remaining height between filters and legend */
+  min-height: 700px;                 /* the charts never get squeezed below this; the PAGE scrolls instead */
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);   /* scatterplot is the biggest view (visual hierarchy) */
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
+.dash__scatter { grid-column: 1; grid-row: 1 / span 2; border-right: 2.5px solid var(--ink); }
+.dash__bar     { grid-column: 2; grid-row: 1; }
+.dash__line    { grid-column: 2; grid-row: 2; border-top: 2px dashed var(--ink); }   /* dashed = linked, like the sketch */
+
+/* ---------- Panel ---------- */
+.panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.panel__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);   /* minmax(0,1fr) lets long subtitles WRAP instead of pushing the layout wider */
+  column-gap: 10px;
+  align-items: baseline;
+  padding: 10px 16px 6px;                       /* a little more breathing room around the heading */
+}
+.panel__tag {
+  grid-row: 1 / span 2;
+  align-self: start;
+  padding: 1px 6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.panel__title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+.panel__sub { margin: 0; font-size: 11px; color: var(--ink-soft); }
+.panel__body { position: relative; flex: 1; min-height: 0; padding-bottom: 6px; }
+
+.placeholder {
+  position: absolute; inset: 12px 14px 12px;
+  display: grid; place-items: center;
+  border: 1.5px dashed var(--ink-soft);
+  color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px;
+}
+
+/* ---------- Chart internals ---------- */
+.chart { position: absolute; inset: 0; }     /* fills the panel body; useSize measures this */
+.chart svg { display: block; }
+
+.plot__bg { fill: var(--paper-2); stroke: var(--ink); stroke-width: 1.5; }
+.plot__grid { stroke: var(--grid); stroke-width: 1; }
+.plot__tick { font-size: 11px; fill: var(--ink-soft); }
+.plot__axis { font-size: 12px; fill: var(--ink); letter-spacing: 0.04em; }
+.plot__diagonal { stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 6 5; }
+.plot__zone { font-size: 10px; letter-spacing: 0.16em; fill: var(--ink-soft); }
+
+.dot { transition: opacity 0.25s; }
+.dot--dim { opacity: 0.07; }                 /* albums removed by a filter fade out but keep their place */
+.dot:hover { stroke: var(--ink); stroke-width: 2; }
+.dot__ring { fill: none; stroke: var(--ink); stroke-width: 2.5; }
+
+/* ---------- Bar chart ---------- */
+.bar { cursor: pointer; }
+.bar__label { font-size: 11.5px; fill: var(--ink); }
+.bar__label.is-on { font-weight: 500; text-decoration: underline; }
+.bar__rect { stroke: var(--ink); stroke-width: 1; transition: width 0.25s; }
+.bar:hover .bar__rect { stroke-width: 2.2; }
+.bar__ghost { fill: none; stroke: var(--ink-soft); stroke-width: 1; stroke-dasharray: 3 3; }   /* count with no filter */
+.bar__count { font-size: 12px; font-weight: 500; fill: var(--ink); }
+.bar__of { font-weight: 400; fill: var(--ink-soft); }
+.bar__axis { stroke: var(--ink); stroke-width: 1.5; }
+
+/* ---------- Line chart ---------- */
+.line__path { fill: none; stroke: var(--ink); stroke-linejoin: round; stroke-linecap: round; }
+.line__path--rose { stroke-width: 2.6; }                              /* solid = rose */
+.line__path--fell { stroke-width: 2.2; stroke-dasharray: 6 4; }       /* dashed = fell */
+.line__median { stroke: var(--ink); stroke-width: 1; opacity: 0.45; }
+.line__median--fell { stroke-dasharray: 4 3; }
+.line__medlabel { font-size: 10.5px; fill: var(--ink); font-weight: 500; }
+.line__guide { stroke: var(--ink-soft); stroke-width: 1; }
+.line__pt { stroke: var(--ink); stroke-width: 1.5; }
+.line__pt--rose { fill: var(--ink); }
+.line__pt--fell { fill: var(--paper); }
+
+/* ---------- Tooltip ---------- */
+.tooltip {
+  position: absolute;
+  z-index: 5;
+  min-width: 190px;
+  padding: 8px 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 11.5px;
+  line-height: 1.5;
+  pointer-events: none;              /* so the tooltip never steals the mouse from the dot */
+  box-shadow: 4px 4px 0 var(--accent);
+}
+.tooltip__title { font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.15; }
+.tooltip__artist { color: #bdb6a3; margin-bottom: 4px; }
+.tooltip b { color: #fff; }
+.tooltip--small { min-width: 130px; }
+.tooltip__sw { display: inline-block; width: 9px; height: 9px; margin-right: 6px; border: 1px solid var(--paper); border-radius: 50%; }
+
+/* ---------- Legend band ---------- */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 34px;
+  padding: 9px 20px;
+  border-top: 2.5px solid var(--ink);
+  background: var(--paper-2);
+}
+.legend__block { display: flex; flex-direction: column; gap: 4px; }
+.legend__title { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+.legend__list { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; padding: 0; list-style: none; }
+.legend__item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+.legend__dot { width: 11px; height: 11px; border: 1px solid var(--ink); border-radius: 50%; }
+.legend__circle { fill: var(--grid); stroke: var(--ink); stroke-width: 1; }
+.legend__circle--missing { fill: none; stroke-dasharray: 2 2; }
+.legend__num { font-size: 11px; fill: var(--ink); }
+.legend__note { font-size: 11px; color: var(--ink-soft); max-width: 300px; }
+
+/* ---------- Loading / error ---------- */
+.message { display: grid; place-items: center; min-height: 60vh; font-size: 14px; }
+.message--error { color: #b00020; }
+
+/* ---------- Small screens: stack the panels vertically ---------- */
+@media (max-width: 900px) {
+  body { padding: 8px; }
+  .frame { height: auto; }
+  .dash { display: flex; flex-direction: column; }
+  .dash__scatter { height: 560px; border-right: 0; border-bottom: 2.5px solid var(--ink); }
+  .dash__bar, .dash__line { height: 300px; }
+  .masthead { flex-direction: column; align-items: flex-start; }
+}
