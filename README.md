@@ -157,7 +157,11 @@ infowiz/
 - Dense regions of the scatterplot overlap; brushing and zoom are planned.
 
 ## AI assistance
-Claude was used to help understand the course concepts, to check the cleaning steps, and to scaffold and comment the React/D3 code. The dataset choice, research questions, genre grouping decision and design choices are my own. *(Edit this paragraph so it matches exactly what you did.)*
+ AI usage that was done to create this project is Claude, and the references that I use is
+Claude, the, the PPTs that were taught in class. And I studied them through YouTube, the
+PPTs, and I understood them through Claude. The dataset came from me. I drafted the
+research question. However, I did take help to understand how those research questions will
+be represented using the data that I'm putting on.
 
 ## Credits
 Data: The Pudding / TidyTuesday (2024-05-07), based on Rolling Stone's lists. Libraries: React, D3, Vite.
