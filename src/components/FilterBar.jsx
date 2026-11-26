@@ -3,6 +3,7 @@
 // ("Lifting state up": the parent is the single source of truth.)
 
 import { GENRES, GENDERS } from '../constants.js';
+import GenreMark from './GenreMark.jsx';
 
 export default function FilterBar({ genre, onGenre, gender, onGender, onReset }) {
   return (
@@ -26,8 +27,7 @@ export default function FilterBar({ genre, onGenre, gender, onGender, onReset })
               onClick={() => onGenre(g.key)}
               title={g.key}                                         // hover shows the full dataset name
             >
-              {/* small colored square = the same color used on the dots (consistent encoding) */}
-              <span className="chip__swatch" style={{ background: g.color }} />
+              <GenreMark genre={g} size={12} className="chip__mark" />
               {g.label}
             </button>
           ))}

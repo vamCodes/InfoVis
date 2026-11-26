@@ -11,6 +11,8 @@
   --ink-soft: #5d5a50;     /* secondary text */
   --grid: #cfc8b6;         /* light gridlines */
   --accent: #e4572e;       /* the one UI accent (matches the first genre hue) */
+  --rose: #0072b2;         /* Okabe-Ito blue; direction also uses a solid line and up triangle */
+  --fell: #d55e00;         /* Okabe-Ito vermilion; direction also uses a dashed line and down triangle */
   --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
   --font-mono: 'DM Mono', ui-monospace, monospace;
 }
@@ -105,8 +107,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .chip:hover { transform: translateY(-1px); }
 .chip.is-on { background: var(--ink); color: var(--paper); }   /* selected look */
-.chip__swatch { width: 10px; height: 10px; border: 1px solid var(--ink); border-radius: 50%; }
-.chip.is-on .chip__swatch { border-color: var(--paper); }
+.chip__mark { flex: 0 0 auto; }
 
 .segmented { display: inline-flex; border: 1.5px solid var(--ink); }
 .segmented__btn { padding: 3px 12px; background: var(--paper); border: 0; border-right: 1.5px solid var(--ink); font-size: 12px; }
@@ -171,14 +172,15 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .plot__bg { fill: var(--paper-2); stroke: var(--ink); stroke-width: 1.5; }
 .plot__grid { stroke: var(--grid); stroke-width: 1; }
-.plot__tick { font-size: 11px; fill: var(--ink-soft); }
-.plot__axis { font-size: 12px; fill: var(--ink); letter-spacing: 0.04em; }
+.plot__tick { font-size: 12px; fill: var(--ink-soft); }
+.plot__axis { font-size: 13px; fill: var(--ink); letter-spacing: 0.04em; }
 .plot__diagonal { stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 6 5; }
 .plot__zone { font-size: 10px; letter-spacing: 0.16em; fill: var(--ink-soft); }
 
 .dot { transition: opacity 0.25s; }
 .dot--dim { opacity: 0.07; }                 /* albums removed by a filter fade out but keep their place */
 .dot:hover { stroke: var(--ink); stroke-width: 2; }
+.dot:focus { outline: none; stroke: var(--ink); stroke-width: 2.5; }
 .dot__ring { fill: none; stroke: var(--ink); stroke-width: 2.5; }
 
 /* ---------- Bar chart ---------- */
@@ -194,15 +196,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- Line chart ---------- */
 .line__path { fill: none; stroke: var(--ink); stroke-linejoin: round; stroke-linecap: round; }
-.line__path--rose { stroke-width: 2.6; }                              /* solid = rose */
-.line__path--fell { stroke-width: 2.2; stroke-dasharray: 6 4; }       /* dashed = fell */
+.line__path--rose { stroke: var(--rose); stroke-width: 3; }           /* solid + blue = rose */
+.line__path--fell { stroke: var(--fell); stroke-width: 3; stroke-dasharray: 7 4; } /* dashed + vermilion = fell */
 .line__median { stroke: var(--ink); stroke-width: 1; opacity: 0.45; }
 .line__median--fell { stroke-dasharray: 4 3; }
+.line__median--rose { stroke: var(--rose); }
+.line__median--fell { stroke: var(--fell); }
 .line__medlabel { font-size: 10.5px; fill: var(--ink); font-weight: 500; }
+.line__medlabel--rose { fill: var(--rose); }
+.line__medlabel--fell { fill: var(--fell); }
+.line__legend text { font-size: 13px; font-weight: 700; fill: var(--ink); }
+.line__legend-mark--rose { fill: var(--rose); }
+.line__legend-mark--fell { fill: var(--fell); }
 .line__guide { stroke: var(--ink-soft); stroke-width: 1; }
 .line__pt { stroke: var(--ink); stroke-width: 1.5; }
-.line__pt--rose { fill: var(--ink); }
-.line__pt--fell { fill: var(--paper); }
+.line__pt--rose { fill: var(--rose); stroke: var(--paper); }
+.line__pt--fell { fill: var(--fell); stroke: var(--paper); }
 
 /* ---------- Tooltip ---------- */
 .tooltip {
@@ -236,7 +245,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .legend__title { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
 .legend__list { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; padding: 0; list-style: none; }
 .legend__item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
-.legend__dot { width: 11px; height: 11px; border: 1px solid var(--ink); border-radius: 50%; }
+.legend__mark { flex: 0 0 auto; }
 .legend__circle { fill: var(--grid); stroke: var(--ink); stroke-width: 1; }
 .legend__circle--missing { fill: none; stroke-dasharray: 2 2; }
 .legend__num { font-size: 11px; fill: var(--ink); }

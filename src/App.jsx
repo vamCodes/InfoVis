@@ -100,8 +100,8 @@ export default function App() {
         <Panel
           className="dash__scatter"
           tag="Q1"
-          title="Who moved the most?"
-          subtitle="x: 2003 rank · y: 2020 rank · color: genre · size: Spotify popularity"
+          title="Which albums moved most, and which genres were they?"
+          subtitle="↖ best = top-left · x→ 2003 rank · y↓ 2020 rank · color + shape = genre · area = popularity"
         >
           <Scatterplot albums={albums} activeIds={activeIds} />
         </Panel>
@@ -109,8 +109,8 @@ export default function App() {
         <Panel
           className="dash__bar"
           tag="Q2"
-          title="Which genres dominate?"
-          subtitle="albums per genre · dashed outline = count with no filter · click a bar to filter"
+          title="Which genres dominate, and how does that change for female artists?"
+          subtitle="▰ albums by genre · outline = all albums · select a bar to filter"
         >
           {/* selectedGenre + onSelectGenre let a click on a bar change the SAME genre filter the chips use */}
           <BarChart
@@ -124,8 +124,8 @@ export default function App() {
         <Panel
           className="dash__line"
           tag="Q3"
-          title="Did risers come later?"
-          subtitle="albums per release year · solid = rose, dashed = fell · markers = median year"
+          title="Were the albums that rose released more recently than those that fell?"
+          subtitle="x = release year · │ = median release year · hover for counts"
         >
           <LineChart albums={albums} activeIds={activeIds} />
         </Panel>

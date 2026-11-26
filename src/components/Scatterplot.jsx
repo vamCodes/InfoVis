@@ -15,7 +15,8 @@
 import { useMemo, useRef, useState } from 'react';
 import { scaleLinear } from 'd3';                    // scaleLinear: maps a number range to a pixel range
 import { useSize } from '../hooks/useSize.js';
-import { colorOf, radius, MISSING_RADIUS, RANK_MIN, RANK_MAX } from '../constants.js';
+import { colorOf, radius, MISSING_RADIUS, RANK_MIN, RANK_MAX, shapeOf, labelOf } from '../constants.js';
+import { markerPath } from './GenreMark.jsx';
 
 // Space (in pixels) reserved around the plot for axis numbers and labels.
 const MARGIN = { top: 18, right: 22, bottom: 50, left: 58 };
@@ -33,6 +34,7 @@ export default function Scatterplot({ albums, activeIds }) {
 
   // `hover` remembers which dot the mouse is over (or null) plus the mouse position, for the tooltip.
   const [hover, setHover] = useState(null);
+  const [focusedId, setFocusedId] = useState(null);
 
   // ---- 1. Geometry: make the plot area a SQUARE so the "no change" diagonal is a true 45 degrees ----
   const innerW = Math.max(0, width - MARGIN.left - MARGIN.right);    // free width after margins
@@ -71,6 +73,8 @@ export default function Scatterplot({ albums, activeIds }) {
     },
     [albums]
   );
+  // Keep one keyboard stop in the 326-mark chart. Arrow keys move between active albums.
+  const keyboardId = activeIds.has(focusedId) ? focusedId : ordered.find((d) => activeIds.has(d.id))?.id;
 
   // Before the container has been measured there is nothing to draw yet; still render the wrapper
   // so useSize has an element to observe.
@@ -79,7 +83,7 @@ export default function Scatterplot({ albums, activeIds }) {
   return (
     <div className="chart" ref={wrapRef}>
       {ready && (
-        <svg width={width} height={height} role="img" aria-label="Scatterplot of 2003 rank versus 2020 rank">
+        <svg width={width} height={height} role="group" aria-label="Scatterplot of album ranks. Focus an album mark for details.">
           {/* ---------- Background square + light gridlines ---------- */}
           <rect x={left} y={top} width={side} height={side} className="plot__bg" />
 
@@ -126,25 +130,56 @@ export default function Scatterplot({ albums, activeIds }) {
             // "Other" and "Unknown" are catch-all buckets (164 of 326 dots). Drawing them quieter
             // (lighter fill, thinner outline) keeps them visible but lets the 5 real genres stand out.
             const quiet = d.genre_group === 'Other' || d.genre_group === 'Unknown';
+            const r = missing ? MISSING_RADIUS : radius(d.spotify_popularity);
+            const shape = shapeOf(d.genre_group);
+            const label = `${d.album}, ${d.clean_name}. 2003 rank ${d.rank_2003}; 2020 rank ${d.rank_2020}; ${d.direction}; genre ${labelOf(d.genre_group)}; release year ${d.release_year}. Focus to read details.`;
+            const common = {
+              key: d.id,
+              className: `dot ${active ? '' : 'dot--dim'}`,
+              fill: color,
+              fillOpacity: missing ? 0.08 : quiet ? 0.35 : 0.7,
+              stroke: missing ? color : quiet ? 'var(--ink-soft)' : 'var(--ink)',
+              strokeWidth: missing ? 1.5 : quiet ? 0.4 : 0.6,
+              'aria-label': label,
+              role: 'button',
+              tabIndex: active && d.id === keyboardId ? 0 : -1,
+              'data-album-mark': 'true',
+              'data-album-id': d.id,
+              pointerEvents: active ? 'all' : 'none',
+              onFocus: (e) => {
+                setFocusedId(d.id);
+                const box = wrapRef.current.getBoundingClientRect();
+                const mark = e.currentTarget.getBoundingClientRect();
+                setHover({ d, mx: mark.left - box.left + mark.width / 2, my: mark.top - box.top + mark.height / 2 });
+              },
+              onBlur: () => setHover(null),
+              onMouseMove: (e) => {
+                const box = wrapRef.current.getBoundingClientRect();
+                setHover({ d, mx: e.clientX - box.left, my: e.clientY - box.top });
+              },
+              onMouseLeave: () => setHover(null),
+              onKeyDown: (e) => {
+                if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(e.key)) {
+                  e.preventDefault();
+                  const activeMarks = ordered.filter((album) => activeIds.has(album.id));
+                  const index = activeMarks.findIndex((album) => album.id === d.id);
+                  const step = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+                  const next = activeMarks[(index + step + activeMarks.length) % activeMarks.length];
+                  setFocusedId(next.id);
+                  [...wrapRef.current.querySelectorAll('[data-album-mark]')]
+                    .find((mark) => mark.getAttribute('data-album-id') === String(next.id))?.focus();
+                  return;
+                }
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setHover({ d, mx: x(d.rank_2003), my: y(d.rank_2020) });
+                }
+              },
+            };
             return (
-              <circle
-                key={d.id}                                      // unique id -> React can track each dot
-                cx={x(d.rank_2003)}                             // x pixel from 2003 rank
-                cy={y(d.rank_2020)}                             // y pixel from 2020 rank
-                r={missing ? MISSING_RADIUS : radius(d.spotify_popularity)}   // size from popularity
-                fill={color}                                    // hue from genre
-                fillOpacity={missing ? 0.08 : quiet ? 0.35 : 0.7}   // quiet < normal; see-through so stacked dots show as darker areas
-                stroke={missing ? color : quiet ? 'var(--ink-soft)' : 'var(--ink)'}   // missing: outline in genre color
-                strokeWidth={missing ? 2 : quiet ? 0.4 : 0.6}
-                className={`dot ${active ? '' : 'dot--dim'}`}   // dot--dim fades filtered-out albums
-                pointerEvents={active ? 'all' : 'none'}         // faded dots cannot be hovered
-                onMouseMove={(e) => {
-                  // Mouse position relative to the chart wrapper (for placing the tooltip).
-                  const box = wrapRef.current.getBoundingClientRect();
-                  setHover({ d, mx: e.clientX - box.left, my: e.clientY - box.top });
-                }}
-                onMouseLeave={() => setHover(null)}
-              />
+              shape === 'circle'
+                ? <circle {...common} cx={x(d.rank_2003)} cy={y(d.rank_2020)} r={r} />
+                : <path {...common} d={markerPath(shape, x(d.rank_2003), y(d.rank_2020), r)} />
             );
           })}
 
@@ -165,6 +200,8 @@ export default function Scatterplot({ albums, activeIds }) {
       {hover && (
         <div
           className="tooltip"
+          role="status"
+          aria-live="polite"
           style={{
             left: hover.mx,
             top: hover.my,

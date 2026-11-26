@@ -15,19 +15,21 @@ import { scaleSqrt } from 'd3';   // D3 scale: maps a number range to another nu
 // The array order is also the display order (most albums first, catch-alls last).
 // ---------------------------------------------------------------------------
 export const GENRES = [
-  { key: 'Punk/Post-Punk/New Wave/Power Pop',   label: 'Punk / New Wave',     color: '#e4572e' },
-  { key: 'Soul/Gospel/R&B',                      label: 'Soul / Gospel / R&B', color: '#f0a202' },
-  { key: 'Blues/Blues Rock',                     label: 'Blues',               color: '#2f5fb3' },
-  { key: 'Country/Folk/Country Rock/Folk Rock',  label: 'Country / Folk',      color: '#2e9d6a' },
-  { key: 'Indie/Alternative Rock',               label: 'Indie / Alternative', color: '#8a4fc7' },
-  { key: 'Other',                                label: 'Other',               color: '#8a867c' },
-  { key: 'Unknown',                              label: 'Unknown',             color: '#c4bdaa' },
+  { key: 'Punk/Post-Punk/New Wave/Power Pop',   label: 'Punk / New Wave',     color: '#e4572e', shape: 'triangle' },
+  { key: 'Soul/Gospel/R&B',                      label: 'Soul / Gospel / R&B', color: '#f0a202', shape: 'diamond' },
+  { key: 'Blues/Blues Rock',                     label: 'Blues',               color: '#2f5fb3', shape: 'square' },
+  { key: 'Country/Folk/Country Rock/Folk Rock',  label: 'Country / Folk',      color: '#2e9d6a', shape: 'cross' },
+  { key: 'Indie/Alternative Rock',               label: 'Indie / Alternative', color: '#8a4fc7', shape: 'star' },
+  { key: 'Other',                                label: 'Other',               color: '#8a867c', shape: 'circle' },
+  { key: 'Unknown',                              label: 'Unknown',             color: '#c4bdaa', shape: 'hexagon' },
 ];
 
 // Look up a genre's color from its key, e.g. colorOf('Soul/Gospel/R&B') -> '#f0a202'.
 // Object.fromEntries turns [[key, color], ...] into { key: color, ... } for fast lookup.
 const COLOR_BY_KEY = Object.fromEntries(GENRES.map((g) => [g.key, g.color]));
 export const colorOf = (genreKey) => COLOR_BY_KEY[genreKey] ?? '#c4bdaa';
+const SHAPE_BY_KEY = Object.fromEntries(GENRES.map((g) => [g.key, g.shape]));
+export const shapeOf = (genreKey) => SHAPE_BY_KEY[genreKey] ?? 'hexagon';
 
 // Same idea for the short label.
 const LABEL_BY_KEY = Object.fromEntries(GENRES.map((g) => [g.key, g.label]));

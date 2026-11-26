@@ -2,6 +2,7 @@
 // Every visual rule on the scatterplot is explained here so the viewer never has to guess.
 
 import { GENRES, radius, MISSING_RADIUS } from '../constants.js';
+import GenreMark from './GenreMark.jsx';
 
 // Three example popularity values to draw as reference circles.
 const SIZE_SAMPLES = [20, 50, 80];
@@ -11,11 +12,11 @@ export default function Legend() {
     <footer className="legend">
       {/* ---- 1. Color = genre ---- */}
       <div className="legend__block">
-        <span className="legend__title">Color · genre</span>
+        <span className="legend__title">Color + shape · genre</span>
         <ul className="legend__list">
           {GENRES.map((g) => (
             <li key={g.key} className="legend__item">
-              <span className="legend__dot" style={{ background: g.color }} />
+              <GenreMark genre={g} size={13} className="legend__mark" />
               {g.label}
             </li>
           ))}

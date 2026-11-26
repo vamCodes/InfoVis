@@ -4,8 +4,8 @@
 // Encodings:
 //   x position = release year   (ordinal/time; position along a common scale is the convention)
 //   y position = number of albums released that year (position on a common scale)
-//   line STYLE = direction: solid = rose, dashed = fell. I use line style instead of two new colors
-//                because color hue is already used for genre; a third hue meaning would confuse.
+//   line COLOR + STYLE = blue solid = rose, vermilion dashed = fell. Redundant cues make direction
+//                        easier to compare while keeping the genre palette separate.
 //   vertical markers = the MEDIAN release year of each group. This is the direct answer to Q3:
 //                if the solid marker sits to the right of the dashed one, risers are more recent.
 //
@@ -16,7 +16,7 @@ import { useMemo, useRef, useState } from 'react';
 import { scaleLinear, line, median, max, range } from 'd3';   // line: builds the SVG path text; median/max/range: helpers
 import { useSize } from '../hooks/useSize.js';
 
-const MARGIN = { top: 14, right: 18, bottom: 34, left: 40 };
+const MARGIN = { top: 40, right: 18, bottom: 34, left: 40 };
 
 // Year span of the 326 albums. Every album is on the 2003 list, so none were released after 2003.
 const YEAR_MIN = 1955;
@@ -93,6 +93,15 @@ export default function LineChart({ albums, activeIds }) {
     <div className="chart" ref={wrapRef}>
       {ready && (
         <svg width={width} height={height} role="img" aria-label="Line chart: albums per release year, risers versus fallers">
+          {/* Larger, in-chart key: color and line pattern both distinguish direction. */}
+          <g className="line__legend" aria-label="Series legend">
+            <line x1={MARGIN.left} x2={MARGIN.left + 28} y1="17" y2="17" className="line__path line__path--rose" />
+            <path d={`M${MARGIN.left + 14},12 L${MARGIN.left + 19},21 L${MARGIN.left + 9},21 Z`} className="line__legend-mark line__legend-mark--rose" />
+            <text x={MARGIN.left + 35} y="22">▲ Rose</text>
+            <line x1={MARGIN.left + 126} x2={MARGIN.left + 154} y1="17" y2="17" className="line__path line__path--fell" />
+            <path d={`M${MARGIN.left + 135},12 L${MARGIN.left + 145},12 L${MARGIN.left + 140},21 Z`} className="line__legend-mark line__legend-mark--fell" />
+            <text x={MARGIN.left + 161} y="22">▼ Fell</text>
+          </g>
           {/* ---------- Axes ---------- */}
           {y.ticks(4).map((t) => (
             <g key={t}>
