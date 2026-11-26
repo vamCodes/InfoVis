@@ -1,6 +1,6 @@
 Rolling Stone's 500 Greatest Albums: 2003 vs 2020
 
-**Mini Project 02 — Information Visualisation**<br>
+
 **Author:** Shivam Singh<br>
 **Email:** ss21645@nyu.edu<br>
 **NetID:** ss21645
