@@ -11,8 +11,8 @@
   --ink-soft: #5d5a50;     /* secondary text */
   --grid: #cfc8b6;         /* light gridlines */
   --accent: #e4572e;       /* the one UI accent (matches the first genre hue) */
-  --rose: #14130f;         /* Okabe-Ito blue; direction also uses a solid line and up triangle */
-  --fell: #14130f;         /* Okabe-Ito vermilion; direction also uses a dashed line and down triangle */
+  --rose: #14130f;
+  --fell: #14130f;
   --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
   --font-mono: 'DM Mono', ui-monospace, monospace;
 }
@@ -196,22 +196,22 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- Line chart ---------- */
 .line__path { fill: none; stroke: var(--ink); stroke-linejoin: round; stroke-linecap: round; }
-.line__path--rose { stroke: var(--rose); stroke-width: 3; }           /* solid + blue = rose */
-.line__path--fell { stroke: var(--fell); stroke-width: 3; stroke-dasharray: 7 4; } /* dashed + vermilion = fell */
+.line__path--rose { stroke: var(--ink); stroke-width: 3; } /* solid line + up triangle */
+.line__path--fell { stroke: var(--ink); stroke-width: 3; stroke-dasharray: 7 4; } /* dashed line + down triangle */
 .line__median { stroke: var(--ink); stroke-width: 1; opacity: 0.45; }
 .line__median--fell { stroke-dasharray: 4 3; }
-.line__median--rose { stroke: var(--rose); }
-.line__median--fell { stroke: var(--fell); }
+.line__median--rose { stroke: var(--ink); }
+.line__median--fell { stroke: var(--ink); }
 .line__medlabel { font-size: 10.5px; fill: var(--ink); font-weight: 500; }
-.line__medlabel--rose { fill: var(--rose); }
-.line__medlabel--fell { fill: var(--fell); }
+.line__medlabel--rose { fill: var(--ink); }
+.line__medlabel--fell { fill: var(--ink); }
 .line__legend text { font-size: 13px; font-weight: 700; fill: var(--ink); }
-.line__legend-mark--rose { fill: var(--rose); }
-.line__legend-mark--fell { fill: var(--fell); }
+.line__legend-mark--rose { fill: var(--ink); }
+.line__legend-mark--fell { fill: var(--ink); }
 .line__guide { stroke: var(--ink-soft); stroke-width: 1; }
 .line__pt { stroke: var(--ink); stroke-width: 1.5; }
-.line__pt--rose { fill: var(--rose); stroke: var(--paper); }
-.line__pt--fell { fill: var(--fell); stroke: var(--paper); }
+.line__pt--rose { fill: var(--ink); stroke: var(--paper); }
+.line__pt--fell { fill: var(--ink); stroke: var(--paper); }
 
 /* ---------- Tooltip ---------- */
 .tooltip {
