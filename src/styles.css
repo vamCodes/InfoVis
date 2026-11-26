@@ -11,8 +11,8 @@
   --ink-soft: #5d5a50;     /* secondary text */
   --grid: #cfc8b6;         /* light gridlines */
   --accent: #e4572e;       /* the one UI accent (matches the first genre hue) */
-  --rose: #0072b2;         /* Okabe-Ito blue; direction also uses a solid line and up triangle */
-  --fell: #d55e00;         /* Okabe-Ito vermilion; direction also uses a dashed line and down triangle */
+  --rose: #14130f;         /* Okabe-Ito blue; direction also uses a solid line and up triangle */
+  --fell: #14130f;         /* Okabe-Ito vermilion; direction also uses a dashed line and down triangle */
   --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
   --font-mono: 'DM Mono', ui-monospace, monospace;
 }
