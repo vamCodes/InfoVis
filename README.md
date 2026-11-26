@@ -1,4 +1,4 @@
-# InfoWiz: Rolling Stone's 500 Greatest Albums
+Rolling Stone's 500 Greatest Albums: 2003 vs 2020
 
 **Mini Project 02 — Information Visualisation**<br>
 **Author:** Shivam Singh<br>
